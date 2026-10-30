@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oscorp International Gaming Platform</title>
+  <style>
+    :root {
+      --bg-dark: #0a0c10;
+      --oscorp-green: #00ff66;
+      --goblin-purple: #8a2be2;
+      --spidey-red: #ff1a40;
+      --spidey-blue: #0088ff;
+      --text-main: #f0f4f8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 12, 16, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      border-bottom: 1px solid rgba(0, 255, 102, 0.2);
+    }
+
+    .brand {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--oscorp-green);
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+    }
+
+    .audio-btn {
+      background: transparent;
+      border: 1px solid var(--oscorp-green);
+      color: var(--oscorp-green);
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .audio-btn:hover {
+      background: var(--oscorp-green);
+      color: var(--bg-dark);
+      box-shadow: 0 0 12px var(--oscorp-green);
+    }
+
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      background: radial-gradient(circle at center, #152219 0%, var(--bg-dark) 70%);
+    }
+
+    .hero-section h1 {
+      font-size: clamp(2.5rem, 6vw, 5.5rem);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 0 20px var(--oscorp-green), 0 0 40px rgba(0, 255, 102, 0.3);
+      margin-bottom: 10px;
+    }
+
+    .hero-section p {
+      font-size: 1.2rem;
+      color: #8fa3b0;
+      letter-spacing: 1px;
+    }
+
+    .scroll-guide {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: var(--oscorp-green);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    .battle-track {
+      position: relative;
+      height: 250vh;
+      background: linear-gradient(180deg, var(--bg-dark) 0%, #110d18 50%, var(--bg-dark) 100%);
+    }
+
+    .battle-stage {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 8vw;
+      overflow: hidden;
+    }
+
+    .arena-title {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      color: #555e6d;
+      text-transform: uppercase;
+    }
+
+    .combatant {
+      width: 280px;
+      height: 380px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      transition: transform 0.1s linear, box-shadow 0.2s ease;
+      will-change: transform;
+    }
+
+    .spiderman {
+      background: linear-gradient(135deg, #101c38 0%, #300c14 100%);
+      border: 2px solid var(--spidey-red);
+      box-shadow: 0 0 25px rgba(255, 26, 64, 0.4);
+      transform: translateX(0);
+    }
+
+    .goblin {
+      background: linear-gradient(135deg, #1b0e29 0%, #0c2414 100%);
+      border: 2px solid var(--oscorp-green);
+      box-shadow: 0 0 25px rgba(0, 255, 102, 0.4);
+      transform: translateX(0);
+    }
+
+    .character-avatar {
+      font-size: 4rem;
+      margin-bottom: 15px;
+    }
+
+    .character-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .spiderman .character-name {
+      color: var(--spidey-red);
+      text-shadow: 0 0 8px rgba(255, 26, 64, 0.8);
+    }
+
+    .goblin .character-name {
+      color: var(--oscorp-green);
+      text-shadow: 0 0 8px rgba(0, 255, 102, 0.8);
+    }
+
+    .impact-zone {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, #fff 0%, #ffbb00 40%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    }
+
+    .games-grid {
+      padding: 100px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .games-grid h2 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 50px;
+      color: var(--oscorp-green);
+      letter-spacing: 2px;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .game-card {
+      background: #12161f;
+      border: 1px solid #1f2736;
+      border-radius: 8px;
+      padding: 30px;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--oscorp-green);
+    }
+
+    .game-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .game-card p {
+      color: #7b8a9e;
+      line-height: 1.6;
+    }
+
+    footer {
+      background: #05070a;
+      border-top: 1px solid #151b24;
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 0.95rem;
+      color: #64748b;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 768px) {
+      .combatant {
+        width: 140px;
+        height: 220px;
+      }
+      .character-avatar {
+        font-size: 2.5rem;
+      }
+      .character-name {
+        font-size: 0.95rem;
+      }
+      .battle-stage {
+        padding: 0 4vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">Oscorp Gaming</div>
+    <button class="audio-btn" id="audioToggle">Toggle Audio Theme</button>
+  </header>
+
+  <section class="hero-section">
+    <h1>Oscorp International</h1>
+    <p>Next-Gen Cybernetic Gaming & Dynamic Combat Platforms</p>
+    <div class="scroll-guide">&#x25BC; Scroll down to witness the clash</div>
+  </section>
+
+  <div class="battle-track" id="battleTrack">
+    <div class="battle-stage">
+      <div class="arena-title">Target Lock // Oscorp Tower Rooftop</div>
+
+      <div class="combatant spiderman" id="spidey">
+        <div class="character-avatar">&#x1F577;&#xFE0F;</div>
+        <div class="character-name">Spider-Man</div>
+      </div>
+
+      <div class="impact-zone" id="impact"></div>
+
+      <div class="combatant goblin" id="goblin">
+        <div class="character-avatar">&#x1F383;</div>
+        <div class="character-name">Green Goblin</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="games-grid">
+    <h2>Active Deployments</h2>
+    <div class="card-container">
+      <div class="game-card">
+        <h3>Venom Protocol</h3>
+        <p>Tactical multiplayer arena combat featuring high-mobility web mechanics and symbiote mutations.</p>
+      </div>
+      <div class="game-card">
+        <h3>Glider Strike</h3>
+        <p>High-speed aerial pursuit missions across high-density neon skyscraper battlegrounds.</p>
+      </div>
+      <div class="game-card">
+        <h3>Web-Slinger VR</h3>
+        <p>Zero-latency real-time physics engine simulations built on Oscorp neural architectures.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Oscorp International Copyright Bharat Sharma
+  </footer>
+
+  <script>
+    const battleTrack = document.getElementById('battleTrack');
+    const spidey = document.getElementById('spidey');
+    const goblin = document.getElementById('goblin');
+    const impact = document.getElementById('impact');
+
+    window.addEventListener('scroll', () => {
+      const rect = battleTrack.getBoundingClientRect();
+      const trackHeight = rect.height - window.innerHeight;
+      let progress = -rect.top / trackHeight;
+
+      progress = Math.max(0, Math.min(1, progress));
+
+      const viewportWidth = window.innerWidth;
+      const travelDistance = (viewportWidth / 2) - (viewportWidth > 768 ? 190 : 100);
+
+      if (progress <= 0.65) {
+        const moveNorm = progress / 0.65;
+        const currentDist = moveNorm * travelDistance;
+        spidey.style.transform = `translateX(${currentDist}px) rotate(${moveNorm * 12}deg)`;
+        goblin.style.transform = `translateX(${-currentDist}px) rotate(${-moveNorm * 12}deg)`;
+        impact.style.opacity = '0';
+        impact.style.transform = 'translate(-50%, -50%) scale(0)';
+      } else if (progress <= 0.85) {
+        const clashNorm = (progress - 0.65) / 0.2;
+        const recoil = Math.sin(clashNorm * Math.PI) * 25;
+        spidey.style.transform = `translateX(${travelDistance - recoil}px) rotate(${12 - clashNorm * 18}deg)`;
+        goblin.style.transform = `translateX(${-(travelDistance - recoil)}px) rotate(${-12 + clashNorm * 18}deg)`;
+        
+        const scaleVal = 1 + Math.sin(clashNorm * Math.PI) * 1.5;
+        impact.style.opacity = '1';
+        impact.style.transform = `translate(-50%, -50%) scale(${scaleVal})`;
+      } else {
+        const exitNorm = (progress - 0.85) / 0.15;
+        const jumpY = Math.sin(exitNorm * Math.PI) * 40;
+        spidey.style.transform = `translateX(${travelDistance}px) translateY(${-jumpY}px) rotate(-6deg)`;
+        goblin.style.transform = `translateX(${-travelDistance}px) translateY(${jumpY}px) rotate(6deg)`;
+        impact.style.opacity = Math.max(0, 1 - (exitNorm * 3)).toString();
+      }
+    });
+
+    let audioCtx = null;
+    let isPlaying = false;
+    let synthInterval = null;
+
+    function playTone(freq, duration, type = 'sawtooth') {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    const audioToggle = document.getElementById('audioToggle');
+    audioToggle.addEventListener('click', () => {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      if (isPlaying) {
+        clearInterval(synthInterval);
+        isPlaying = false;
+        audioToggle.textContent = 'Enable Audio Theme';
+        audioToggle.style.background = 'transparent';
+        audioToggle.style.color = 'var(--oscorp-green)';
+      } else {
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        isPlaying = true;
+        audioToggle.textContent = 'Mute Audio Theme';
+        audioToggle.style.background = 'var(--oscorp-green)';
+        audioToggle.style.color = 'var(--bg-dark)';
+
+        const bassNotes = [65.41, 73.42, 82.41, 65.41, 98.00, 87.31];
+        let step = 0;
+        synthInterval = setInterval(() => {
+          playTone(bassNotes[step % bassNotes.length], 0.35, 'sawtooth');
+          if (step % 2 === 0) {
+            playTone(196.00, 0.15, 'triangle');
+          }
+          step++;
+        }, 320);
+      }
+    });
+  </script>
+</body>
+</html>
